@@ -1,2 +1,35 @@
 store load
 show selected
+select reset
+
+select sender root+9@lightboard.localdomain
+show selected
+select reset
+
+select date 2016-08-28
+show selected
+select reset
+
+select date 2016-01-01..2017-01-01
+show selected 
+select reset
+
+select date +2016-01-01
+show selected
+select reset
+
+select date -2017-01-01
+show selected
+select reset
+
+# THIS should 
+select date 2016-08-28 2016-01-01..2017-01-01 +2016-01-01 -2017-01-01
+select reset
+
+select sender root+9@lightboard.localdomain
+super requeue
+select reset
+
+select deferred
+show selected
+super delete
