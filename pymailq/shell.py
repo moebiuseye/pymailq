@@ -303,25 +303,22 @@ class PyMailqShell(cmd.Cmd, object):
         """
         from datetime import datetime
         from pprint import pprint
-        start=None
-        stop=None
         start_stop_list=[]
         for date in dates:
+          start=None
+          stop=None
           if '..' in date:
             d=date.split('..')
             start=d[0]
             stop=d[-1]
-          elif date[0] == '+':
-            start=date[1:]
-            stop=None
-          elif date[0] == '-':
-            start=None
+          elif date[0] == '+' or date[0] == '-':
             stop=date[1:]
           else:
             start=date
             stop=date
-          start=datetime.strptime(start,"%Y-%m-%d").date()
-          stop=datetime.strptime(stop,"%Y-%m-%d").date()
+
+          start=datetime.strptime(start,"%Y-%m-%d").date() or datetime.min.date()
+          stop=datetime.strptime(stop,"%Y-%m-%d").date() or datetime.max.date()
           start_stop_list.append((start,stop))
           
         pprint(start_stop_list)
@@ -457,7 +454,9 @@ class PyMailqShell(cmd.Cmd, object):
         return lines
 
     # Postsuper generic command
-    def _super__do(self, cmd, action_name):
+    def super__do(self, cmd, action_name):
+        """Some Docstring
+        """
         if not self.pstore.loaded_at:
             raise(StoreNotLoaded)
         if self.selector.mails is None:
@@ -476,22 +475,22 @@ class PyMailqShell(cmd.Cmd, object):
         """Deletes the mails in current selection
         ..Usage: super delete
         """
-        return self._super__do('delete', 'Deleted')
+        return self.super__do('delete', 'Deleted')
 
     def _super_hold(self):
         """Put on hold the mails in current selection
         ..Usage: super hold
         """
-        return self._super__do('hold', 'Put on hold')
+        return self.super__do('hold', 'Put on hold')
 
     def _super_release(self):
         """Releases from hold the mails in current selection
         ..Usage: super release
         """
-        return self._super__do('release', 'Released')
+        return self.super__do('release', 'Released')
 
     def _super_requeue(self):
         """requeue the mails in current selection
         ..Usage: super requeue
         """
-        return self._super__do('requeue', 'Requeued')
+        return self.super__do('requeue', 'Requeued')
