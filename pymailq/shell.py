@@ -309,22 +309,23 @@ class PyMailqShell(cmd.Cmd, object):
         for date in dates:
           if '..' in date:
             d=date.split('..')
-            start=datetime.strptime(d[0],"%Y-%m-%d")
-            stop=datetime.strptime(d[-1],"%Y-%m-%d")
+            start=d[0]
+            stop=d[-1]
           elif date[0] == '+':
-            start=datetime.strptime(date[1:],"%Y-%m-%d")
+            start=date[1:]
             stop=None
           elif date[0] == '-':
             start=None
-            stop=datetime.strptime(date[1:],"%Y-%m-%d")
+            stop=date[1:]
           else:
-            start=datetime.strptime(date,"%Y-%m-%d")
-            stop=datetime.strptime(date,"%Y-%m-%d")
+            start=date
+            stop=date
+          start=datetime.strptime(start,"%Y-%m-%d").date()
+          stop=datetime.strptime(stop,"%Y-%m-%d").date()
           start_stop_list.append((start,stop))
           
         pprint(start_stop_list)
-        for (start, stop) in start_stop_list:
-          self.selector.lookup_date(start=start, stop=stop)
+        self.selector.lookup_date(start_stop_list=start_stop_list)
 
     def _select_error(self, error_msg):
         """
