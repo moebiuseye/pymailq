@@ -193,13 +193,14 @@ class MailSelector(object):
         :rtype: :func:`list`
         """
 
+        print(self.mails[0].date)
         if start is None and stop is None:
             raise TypeError("Required arguments 'start' or 'stop' not found")
 
         if start is None:
-            start = datetime(1970,1,1)
+            start = datetime.min
         if stop is None:
-            stop = datetime.now()
+            stop = datetime.max
 
         self.mails = [ mail for mail in self.mails
                        if mail.date >= start and mail.date <= stop ]

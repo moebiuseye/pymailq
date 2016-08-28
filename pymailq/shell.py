@@ -289,12 +289,42 @@ class PyMailqShell(cmd.Cmd, object):
 
         self.selector.lookup_size(smin = smin, smax = smax)
 
-    def _select_date(self, dateA, dateB = None):
+    def _select_date(self, *dates):
         """
         Select mails by date
-        ..Usage: select date X [Y]
+        ..Usage:
+                 ..select date <DATESPEC> [DATESPEC..]
+                 ..Where <DATESPEC> can be
+                 ..YYYY-MM-DD
+                 ..YYYY-MM-DD..YYYY-MM-DD (within a date range)
+                 ..+YYYY-MM-DD (after a certain date)
+                 ..-YYYY-MM-DD (before a certain date)
+                 
         """
-        return ["Still not implemented"]
+        from datetime import datetime
+        from pprint import pprint
+        start=None
+        stop=None
+        start_stop_list=[]
+        for date in dates:
+          if '..' in date:
+            d=date.split('..')
+            start=datetime.strptime(d[0],"%Y-%m-%d")
+            stop=datetime.strptime(d[-1],"%Y-%m-%d")
+          elif date[0] == '+':
+            start=datetime.strptime(date[1:],"%Y-%m-%d")
+            stop=None
+          elif date[0] == '-':
+            start=None
+            stop=datetime.strptime(date[1:],"%Y-%m-%d")
+          else:
+            start=datetime.strptime(date,"%Y-%m-%d")
+            stop=datetime.strptime(date,"%Y-%m-%d")
+          start_stop_list.append((start,stop))
+          
+        pprint(start_stop_list)
+        for (start, stop) in start_stop_list:
+          self.selector.lookup_date(start=start, stop=stop)
 
     def _select_error(self, error_msg):
         """
