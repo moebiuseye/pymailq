@@ -30,6 +30,6 @@ select sender root+9@lightboard.localdomain
 super requeue
 select reset
 
-select deferred
+select status deferred
 show selected
 super delete
