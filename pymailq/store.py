@@ -254,7 +254,7 @@ class PostqueueStore(object):
 
             :func:`list` object to store Postfix command and arguments to view
             the mails queue content.
-            Default is ``["/usr/sbin/postqueue", "-p"]``.
+            Default is ``["postqueue", "-p"]``.
 
         .. attribute:: spool_path
 
@@ -298,7 +298,7 @@ class PostqueueStore(object):
 
         :rfc:`3696` -- Checking and Transformation of Names
     """
-    postqueue_cmd = ["/usr/sbin/postqueue", "-p"]
+    postqueue_cmd = ["postqueue", "-p"]
     spool_path = "/var/spool/postfix"
     postqueue_mailstatus = ['active', 'deferred', 'hold']
     mail_id_re = re.compile(r"^[A-F0-9]{10,12}[*!]?$")
