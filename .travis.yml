@@ -5,9 +5,11 @@ python:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq postfix
-  - echo 'smtpd_sender_restrictions = regexp:/etc/postfix/sender_restriction' | sudo tee /etc/postfix/main.cf
+  - echo 'smtpd_sender_restrictions = regexp:/etc/postfix/sender_restriction' | sudo tee -a /etc/postfix/main.cf
   - sudo cp .travis/postfix/sender_restriction /etc/postfix/
   - sudo cp samples/* /var/spool/postfix/hold/
+  - sudo postmap /etc/postfix/sender_restriction
+  - sudo service postfix restart
 install: 
   - pip install -r requirements.txt
   - python ./setup.py install
