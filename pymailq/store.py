@@ -1,22 +1,22 @@
-#
-#    Postfix queue control python tool (pymailq)
-#
-#    Copyright (C) 2014 Denis Pompilio (jawa) <denis.pompilio@gmail.com>
-#
-#    This file is part of pymailq
-#
-#    This program is free software; you can redistribute it and/or
-#    modify it under the terms of the GNU General Public License
-#    as published by the Free Software Foundation; either version 2
-#    of the License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, see <http://www.gnu.org/licenses/>.
+"""Postfix queue control python tool (pymailq).
+
+Copyright (C) 2014 Denis Pompilio (jawa) <denis.pompilio@gmail.com>
+
+This file is part of pymailq
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/>.
+"""
 
 import os
 import gc
@@ -135,7 +135,7 @@ class Mail(object):
     """
 
     def __init__(self, mail_id, size = 0, date = None, sender = ""):
-        """Init method"""
+        """Init method."""
         self.parsed = False
         self.parse_error = ""
         self.qid = mail_id
@@ -230,6 +230,7 @@ class Mail(object):
 
     @debug
     def cat(self):
+        """Get output from postcat."""
         title=("\n === Contents of MAIL with QID %s === \n" % self.qid)
         postcat_cmd=self.postcat_cmd
         postcat_cmd[2]=self.qid
@@ -241,7 +242,7 @@ class Mail(object):
         return title+stdout.decode()
 
 class PostqueueStore(object):
-    """
+    r"""
     Postfix mails queue informations storage.
 
     The :class:`~store.PostqueueStore` provides methods to load Postfix
@@ -291,7 +292,7 @@ class PostqueueStore(object):
             Python compiled regular expression object (:class:`re.RegexObject`)
             provided by :func:`re.compile` method to match email addresses.
             Default used regular expression is:
-            ``r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$"``
+            ``r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+$"``
 
         .. attribute:: MailClass
 
@@ -310,6 +311,7 @@ class PostqueueStore(object):
 
         :rfc:`3696` -- Checking and Transformation of Names
     """
+    
     postqueue_cmd = ["postqueue", "-p"]
     spool_path = "/var/spool/postfix"
     postqueue_mailstatus = ['active', 'deferred', 'hold']
@@ -318,7 +320,7 @@ class PostqueueStore(object):
     MailClass = Mail
 
     def __init__(self):
-        """Init method"""
+        """Init method."""
         self.loaded_at = None
         self.mails = []
 
@@ -361,7 +363,6 @@ class PostqueueStore(object):
         :return: True or false
         :rtype: :func:`bool`
         """
-
         if self.mail_id_re.match(mail_id) is None:
             return False
         return True
@@ -485,7 +486,7 @@ class PostqueueStore(object):
 
     @debug
     def _load_from_file(self, filename):
-        """        """
+        """Undocumented."""
 
 
     @debug

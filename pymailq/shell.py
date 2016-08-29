@@ -1,23 +1,23 @@
-#
-#    Postfix queue control python tool (pymailq)
-#
-#    Copyright (C) 2014 Denis Pompilio (jawa) <denis.pompilio@gmail.com>
-#    Copyright (C) 2014 Jocelyn Delalande <jdelalande@oasiswork.fr>
-#
-#    This file is part of pymailq
-#
-#    This program is free software; you can redistribute it and/or
-#    modify it under the terms of the GNU General Public License
-#    as published by the Free Software Foundation; either version 2
-#    of the License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, see <http://www.gnu.org/licenses/>.
+"""Postfix queue control python tool (pymailq).
+
+Copyright (C) 2014 Denis Pompilio (jawa) <denis.pompilio@gmail.com>
+Copyright (C) 2014 Jocelyn Delalande <jdelalande@oasiswork.fr>
+
+This file is part of pymailq
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+"""
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 import re
 import cmd
@@ -34,11 +34,14 @@ except ImportError as error:
     print("Python readline is not available, shell capabilities are limited.")
 
 class StoreNotLoaded(Exception):
+    """Undocumented."""
+    
     def __str__(self):
+        """Undocumented."""
         return 'The store is not loaded'
 
 class PyMailqShell(cmd.Cmd, object):
-    """PyMailq shell for interactive mode"""
+    """PyMailq shell for interactive mode."""
 
     # Automatic building of supported methods and documentation
     commands_info = {
@@ -57,7 +60,7 @@ class PyMailqShell(cmd.Cmd, object):
     do_cat = None
 
     def __init__(self):
-        """Init method"""
+        """Init method."""
         cmd.Cmd.__init__(self)
 
         # EOF action is registered here to hide it from user
@@ -84,19 +87,23 @@ class PyMailqShell(cmd.Cmd, object):
 
     # Internal functions
     def emptyline(self):
+        """Undocumented."""
         pass
 
     def help_help(self):
+        """Undocumented."""
         print("Show available commands")
 
     def do_exit(self, arg):
+        """Undocumented."""
         return True
 
     def help_exit(self):
+        """Undocumented."""
         print("Exit PyMailq shell (or use Ctrl-D)")
 
     def cmdloop_nointerrupt(self):
-        """Specific cmdloop to handle KeyboardInterrupt"""
+        """Specific cmdloop to handle KeyboardInterrupt."""
         can_exit = False
         # intro message is not in self.intro not to display it each time
         # cmdloop is restarted
@@ -109,6 +116,7 @@ class PyMailqShell(cmd.Cmd, object):
                 print("^C")
 
     def postloop(self):
+        """Undocumented."""
         cmd.Cmd.postloop(self)
         print("\nExiting shell... Bye.")
 
@@ -146,8 +154,7 @@ class PyMailqShell(cmd.Cmd, object):
 
     @property
     def prompt(self):
-        """Dynamic prompt with usefull informations"""
-
+        """Dynamic prompt with usefull informations."""
         prompt = ['PyMailq']
         if self.selector is not None:
             prompt.append(' (sel:%d)' % (len(self.selector.mails)))
@@ -156,8 +163,7 @@ class PyMailqShell(cmd.Cmd, object):
         return "".join(prompt)
 
     def __do(self, cmd_category, str_arg):
-        """Generic do_* method to call cmd categories"""
-
+        """Generic do_* method to call cmd categories."""
         args = shlex.split(str_arg)
         if not len(args):
             getattr(self, "help_%s" % (cmd_category))()
@@ -181,7 +187,7 @@ class PyMailqShell(cmd.Cmd, object):
             print("*** Syntax error:", msg)
 
     def __complete(self, cmd_category, text, line, begidx, endidx):
-        """Generic command completion method"""
+        """Generic command completion method."""
         # TODO: find a way to stop completion if no more arguments
         #       It will probably not be possible to build it in auto :/
         match = "_%s_" % (cmd_category)
@@ -190,7 +196,7 @@ class PyMailqShell(cmd.Cmd, object):
 
 # Store commands
     def _store_load(self, filename = None):
-        """Load Postfix queue content"""
+        """Load Postfix queue content."""
         try:
             self.pstore.load(filename = filename)
             # Automatic load of selector if it is empty and never used.
@@ -201,7 +207,7 @@ class PyMailqShell(cmd.Cmd, object):
             return ["*** Error: unable to load store", "    {0}".format(error)]
 
     def _store_status(self):
-        """Show store status"""
+        """Show store status."""
         if self.pstore is None or self.pstore.loaded_at is None:
             return ["store is not loaded"]
         return ["store loaded with %d mails at %s" % (
@@ -209,19 +215,20 @@ class PyMailqShell(cmd.Cmd, object):
 
 # Selector commands
     def _select_reset(self):
-        """Reset content of selector with store content"""
+        """Reset content of selector with store content."""
         self.selector.reset()
         return ["Selector resetted with store content (%s mails)" % (
                                                     len(self.selector.mails))]
 
     def _select_replay(self):
-        """Reset content of selector with store content and replay filters"""
+        """Reset content of selector with store content and replay filters."""
         self.selector.replay_filters()
         return ["Selector resetted and filters replayed"]
 
     def _select_rmfilter(self, filterid):
         """
-        Remove filter previously applied
+        Remove filter previously applied.
+
         ..Filters ids are used to specify filter to remove
         ..Usage: select rmfilter <filterid>
         """
@@ -235,14 +242,16 @@ class PyMailqShell(cmd.Cmd, object):
 
     def _select_status(self, status):
         """
-        Select mails with specific postfix status
+        Select mails with specific postfix status.
+
         ..Usage: select status <status>
         """
         self.selector.lookup_status(status = status)
 
     def _select_sender(self, sender, partial = True):
         """
-        Select mails from sender
+        Select mails from sender.
+
         ..Usage: select sender <sender> [exact]
         """
         if partial is not True:  # received from command line
@@ -253,7 +262,8 @@ class PyMailqShell(cmd.Cmd, object):
 
     def _select_size(self, sizeA, sizeB = None):
         """
-        Select mails by size in Bytes
+        Select mails by size in Bytes.
+
         ..- and + are supported, if not specified, search for exact size
         ..Size range is allowed by using - (lesser than) and + (greater than)
         ..Usage: select size <-n|n|+n> [-n]
@@ -294,7 +304,8 @@ class PyMailqShell(cmd.Cmd, object):
 
     def _select_date(self, *dates):
         """
-        Select mails by date
+        Select mails by date.
+
         ..Usage:
                  ..select date <DATESPEC> [DATESPEC..]
                  ..Where <DATESPEC> can be
@@ -329,7 +340,8 @@ class PyMailqShell(cmd.Cmd, object):
 
     def _select_error(self, error_msg):
         """
-        Select mails by error message
+        Select mails by error message.
+
         Specified error message can be partial
         ..Usage: select error <error_msg>
         """
@@ -338,8 +350,7 @@ class PyMailqShell(cmd.Cmd, object):
 
 # Viewer commands and wrapper
     def viewer(function):
-        """Result viewer decorator
-        """
+        """Result viewer decorator."""
         def wrapper(self, *args, **kwargs):
             args = list(args)  # conversion need for arguments cleaning
             limit = None
@@ -394,8 +405,9 @@ class PyMailqShell(cmd.Cmd, object):
 
     def do_show(self, str_arg):
         """
-        Generic viewer utility
-        Optionnal modifiers can be provided to alter output:
+        Generic viewer utility.
+
+        Optionnal modifiers can be provided to alter output.
         ..limit <n>                     display the first n entries
         ..sortby <field> [asc|desc]     sort output by field asc or desc
         ..rankby <field>                Produce mails ranking by field
@@ -431,7 +443,8 @@ class PyMailqShell(cmd.Cmd, object):
     @utils.sorter
     def _show_selected(self):
         """
-        Show selected mails
+        Show selected mails.
+
         ..Usage: show selected [modifiers]
         """
         if self.selector.mails is None:
@@ -441,7 +454,8 @@ class PyMailqShell(cmd.Cmd, object):
 
     def _show_filters(self):
         """
-        Show filters applied on current mails selection
+        Show filters applied on current mails selection.
+
         ..Usage: show filters
         """
         if not len(self.selector.filters):
@@ -458,8 +472,7 @@ class PyMailqShell(cmd.Cmd, object):
 
     # Postsuper generic command
     def super__do(self, cmd, action_name):
-        """Some Docstring
-        """
+        """Undocumented."""
         if not self.pstore.loaded_at:
             raise(StoreNotLoaded)
         if self.selector.mails is None:
@@ -475,31 +488,40 @@ class PyMailqShell(cmd.Cmd, object):
         return ['%s %r mails' % (action_name, handled_c)]
 
     def _super_delete(self):
-        """Deletes the mails in current selection
+        """
+        Delete the mails in current selection.
+
         ..Usage: super delete
         """
         return self.super__do('delete', 'Deleted')
 
     def _super_hold(self):
-        """Put on hold the mails in current selection
+        """Put on hold the mails in current selection.
+
         ..Usage: super hold
         """
         return self.super__do('hold', 'Put on hold')
 
     def _super_release(self):
-        """Releases from hold the mails in current selection
+        """
+        Release from hold the mails in current selection.
+
         ..Usage: super release
         """
         return self.super__do('release', 'Released')
 
     def _super_requeue(self):
-        """requeue the mails in current selection
+        """
+        Requeue the mails in current selection.
+
         ..Usage: super requeue
         """
         return self.super__do('requeue', 'Requeued')
 
     def _cat_selection(self):
-        """See mail content in current selection
+        """
+        See mail content in current selection (needs root or postfix user).
+
         ..Usage: cat selection
         """
         output=""
@@ -508,7 +530,9 @@ class PyMailqShell(cmd.Cmd, object):
         return output.split('\n')
 
     def _cat_item (self, qid):
-      """ See mail content in specific item  
+      """
+      See mail content in specific item (needs root or postfix user).
+
       ..Usage: cat item <QID>
       """
       mail=store.Mail(qid)

@@ -12,6 +12,8 @@ before_install:
   - sudo service postfix restart
 install: 
   - pip install -r requirements.txt
+  - pip install -r .travis/requirements.txt
   - python ./setup.py install
 script: 
   - pqshell < .travis/pqshell.cmds
+  - find pymailq -type f -name '*.py' -exec pydocstyle {} \;
