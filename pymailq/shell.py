@@ -469,7 +469,7 @@ class PyMailqShell(cmd.Cmd, object):
             self._store_load()
             self._select_reset()
 
-        return ['{} {} mails'.format(action_name, handled_c)]
+        return ['%s %r mails' % (action_name, handled_c)]
 
     def _super_delete(self):
         """Deletes the mails in current selection
