@@ -32,4 +32,8 @@ select reset
 
 select status deferred
 show selected
+
+select reset
+show selected
 super delete
+show selected
