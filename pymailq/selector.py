@@ -127,7 +127,6 @@ class MailSelector(object):
 
         return self.mails
 
-
     @debug
     @filter_registration
     def lookup_sender(self, sender, partial = False):
@@ -181,7 +180,7 @@ class MailSelector(object):
 
         The ``start_stop_list`` argument is optional and defaults to None. 
 
-        :param list((datetime.date, datetime.date),...) start_stop_list: List of tuples 
+        :param list((datetime.date, datetime.date),...) start_stop_list: List of tuples
         representing time ranges ``[(start,stop),...]``
         This method will raise :class:`~exception.TypeError` if both
         elements ``start`` and ``stop`` are set to ``None``.
