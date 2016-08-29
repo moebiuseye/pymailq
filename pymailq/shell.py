@@ -23,6 +23,7 @@ import re
 import cmd
 from functools import partial
 from subprocess import CalledProcessError
+import subprocess
 import shlex
 from pymailq import store, control, selector, utils
 
@@ -44,7 +45,8 @@ class PyMailqShell(cmd.Cmd, object):
         'store': 'Control of Postfix queue content storage',
         'select': 'Select mails from Postfix queue content',
         'inspect': 'Mail content inspector',
-        'super' : 'call postsuper commands'
+        'super' : 'call postsuper commands',
+        'cat' : 'dump mail contents'
         }
 
     # XXX: do_* methods are parsed before init and must be declared here
@@ -52,6 +54,7 @@ class PyMailqShell(cmd.Cmd, object):
     do_select = None
     do_show = None
     do_super = None
+    do_cat = None
 
     def __init__(self):
         """Init method"""
@@ -494,3 +497,21 @@ class PyMailqShell(cmd.Cmd, object):
         ..Usage: super requeue
         """
         return self.super__do('requeue', 'Requeued')
+
+    def _cat_selection(self):
+        """See mail content in current selection
+        ..Usage: cat selection
+        """
+        output=""
+        for mail in self.selector.mails:
+          output+=mail.cat()
+        return output.split('\n')
+
+    def _cat_item (self, qid):
+      """ See mail content in specific item  
+      ..Usage: cat item <QID>
+      """
+      mail=store.Mail(qid)
+      return mail.cat().split('\n')
+      
+      

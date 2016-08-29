@@ -228,6 +228,18 @@ class Mail(object):
 
         return datas
 
+    @debug
+    def cat(self):
+        title=("\n === Contents of MAIL with QID %s === \n" % self.qid)
+        postcat_cmd=self.postcat_cmd
+        postcat_cmd[2]=self.qid
+        child = subprocess.Popen(postcat_cmd,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        (stdout,stderr) = child.communicate()
+  
+        return title+stdout.decode()
+
 class PostqueueStore(object):
     """
     Postfix mails queue informations storage.
