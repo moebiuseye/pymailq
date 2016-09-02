@@ -26,6 +26,7 @@ select date 2016-08-28 2016-01-01..2017-01-01 +2016-01-01 -2017-01-01
 select reset
 
 cat selection
+cat item 64E7660076F 4B44760076D 3E05760076C
 cat item 64E7660076F
 
 select sender root+9@lightboard.localdomain

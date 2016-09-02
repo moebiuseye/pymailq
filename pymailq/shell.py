@@ -49,7 +49,8 @@ class PyMailqShell(cmd.Cmd, object):
         'select': 'Select mails from Postfix queue content',
         'inspect': 'Mail content inspector',
         'super' : 'call postsuper commands',
-        'cat' : 'dump mail contents'
+        'cat' : 'dump mail contents',
+        'extract' : 'dump mail attachments to dir',
         }
 
     # XXX: do_* methods are parsed before init and must be declared here
@@ -58,6 +59,7 @@ class PyMailqShell(cmd.Cmd, object):
     do_show = None
     do_super = None
     do_cat = None
+    do_extract = None
 
     def __init__(self):
         """Init method."""
@@ -529,13 +531,35 @@ class PyMailqShell(cmd.Cmd, object):
           output+=mail.cat()
         return output.split('\n')
 
-    def _cat_item (self, qid):
-      """
-      See mail content in specific item (needs root or postfix user).
+    def _cat_item (self, *qids):
+        """
+        See mail content in specific item (needs root or postfix user).
 
-      ..Usage: cat item <QID>
-      """
-      mail=store.Mail(qid)
-      return mail.cat().split('\n')
+        ..Usage: cat item <QID> [QID ...]
+        """
+        output=""
+        for qid in qids:
+          mail=store.Mail(qid)
+          output+=mail.cat()
+        return output.split('\n')
+
+    def _extract_selection (self, target):
+        """
+        Extract mail attachments in current selection (needs root or postfix user).
+
+        ..Usage: extract selection <Target Directory>
+        """
+        return ["Not implemented yet"]
       
-      
+
+    def _extract_item (self, target, *qids):
+        """
+        Extract mail attachments in current selection (needs root or postfix user).
+
+        ..Usage: extract selection <Target Directory>  <QID> [QID ...]
+        """
+        output=""
+        for qid in qids:
+          mail=store.Mail(qid)
+          output = "%r" % mail.__dict__['head'].__dict__
+        return output.split('\n')
