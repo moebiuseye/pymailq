@@ -25,7 +25,7 @@ from datetime import datetime
 
 
 #: Boolean to control activation of the :func:`debug` decorator.
-DEBUG = True
+DEBUG = False
 
 def debug(function):
     """
